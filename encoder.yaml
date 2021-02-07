@@ -6,7 +6,7 @@ esphome:
     upload_speed: 921600
 
 wifi:
-  ssid: "Nadtocheeva 5"
+  ssid: "Test"
   password: "123123123"
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
