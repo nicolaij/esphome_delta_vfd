@@ -1,6 +1,5 @@
 #include "delta_vfd.h"
 #include "esphome/core/log.h"
-#include <string.h>
 
 namespace esphome
 {
@@ -14,7 +13,7 @@ namespace esphome
       if (this->state_ != STATE_REPLYWAIT)
       {
         this->state_ = STATE_REPLYWAIT;
-        send_cmd_(0x03, 0x2100, 2); //read reg
+        send_cmd_(0x03, 0x0000, 5); //read reg
       }
     }
 
@@ -84,7 +83,7 @@ namespace esphome
 
           if (this->state_ == STATE_REPLYWAIT)
           {
-            ESP_LOGV(TAG, "Receive: %s - %d", this->read_buffer_, this->state_);
+            ESP_LOGD(TAG, "Receive: %s - %d", this->read_buffer_, this->state_);
           }
           else
           {
@@ -140,7 +139,17 @@ namespace esphome
       p++;
       *p = 0;
 
+      digitalWrite(4, HIGH); 
+      digitalWrite(15, HIGH);
+
+      sendtime = millis();
+
       this->write_str(send_frame);
+
+      delay(9);
+
+      digitalWrite(4, LOW); 
+      digitalWrite(15, LOW);
 
       ESP_LOGD(TAG, "Send: %s - %d", send_frame, this->state_);
     };
@@ -178,7 +187,17 @@ namespace esphome
       p++;
       *p = 0;
 
+      digitalWrite(4, HIGH); 
+      digitalWrite(15, HIGH);
+
+      sendtime = millis();
+
       this->write_str(send_frame);
+
+      delay(15);
+
+      digitalWrite(4, LOW); 
+      digitalWrite(15, LOW);
 
       ESP_LOGD(TAG, "Send: %s - %d", send_frame, this->state_);
     }
@@ -224,7 +243,9 @@ namespace esphome
           return;
       }
 
-      if (cnt > 6)
+      cnt--; //без CRC
+
+      if (cnt >= 6)
       {
         uint8_t crc = 0;
         int i = 0;
@@ -239,18 +260,24 @@ namespace esphome
         }
         else
         {
-          ESP_LOGD(TAG, "DATA OK: %s - %d", this->read_buffer_, this->state_);
+          ESP_LOGV(TAG, "DATA OK: %s - %d", this->read_buffer_, this->state_);
         }
 
         if (frame[1] == 0x03)
         {
           uint8_t len = frame[2];
-          if (len == 4) //запрошено 2 слова
+          if (cnt > 12 && len == 10) //запрошено 5 слов
           {
             uint16_t error_code = (uint16_t(frame[3]<<8)) | frame[4];
             uint16_t status_code = (uint16_t(frame[5]<<8)) | frame[6];
+            uint16_t set_freq = (uint16_t(frame[7]<<8)) | frame[8];
+            uint16_t out_freq = (uint16_t(frame[9]<<8)) | frame[10];
+            uint16_t out_current = (uint16_t(frame[11]<<8)) | frame[12];
             this->error_code_sensor->publish_state(error_code);
             this->status_code_sensor->publish_state(status_code);
+            this->set_freq_sensor->publish_state(set_freq);
+            this->out_freq_sensor->publish_state(out_freq);
+            this->out_current_sensor->publish_state(out_current);
           }
         }
       }
@@ -264,6 +291,14 @@ namespace esphome
     }
 
     float VFDComponent::get_setup_priority() const { return setup_priority::DATA; }
+
+    void VFDComponent::setup()
+    {
+      pinMode(4, OUTPUT);
+      pinMode(15, OUTPUT);
+      digitalWrite(4, LOW);
+      digitalWrite(15, LOW);
+    }
 
   } // namespace delta_vfd
 } // namespace esphome

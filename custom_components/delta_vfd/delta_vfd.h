@@ -27,6 +27,7 @@ namespace esphome
     public:
       /// Retrieve the latest sensor values. This operation takes approximately 16ms.
       void update() override;
+      void setup() override;
       void loop() override;
       void dump_config() override;
       float get_setup_priority() const override;
@@ -39,6 +40,9 @@ namespace esphome
       /*void set_status_code_sensor(sensor::Sensor *status_code_sensor) { status_code_sensor_ = status_code_sensor; }*/
       sensor::Sensor *error_code_sensor = new sensor::Sensor();
       sensor::Sensor *status_code_sensor = new sensor::Sensor();
+      sensor::Sensor *set_freq_sensor = new sensor::Sensor();
+      sensor::Sensor *out_freq_sensor = new sensor::Sensor();
+      sensor::Sensor *out_current_sensor = new sensor::Sensor();
 
     protected:
       void send_cmd_(uint8_t cmd, uint16_t start_address, uint16_t data);
@@ -52,7 +56,6 @@ namespace esphome
       unsigned long timeout_;
 
       int later_func_{};
-
     };
   } // namespace delta_vfd
 } // namespace esphome
