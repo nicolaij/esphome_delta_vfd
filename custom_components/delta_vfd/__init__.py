@@ -1,6 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.const import CONF_ID, CONF_ADDRESS, CONF_RECEIVE_TIMEOUT
+from esphome.const import CONF_ID, CONF_ADDRESS, CONF_RECEIVE_TIMEOUT, CONF_SENSORS, CONF_NAME
 from esphome.components import uart, sensor
 
 DEPENDENCIES = ['uart']
@@ -22,7 +22,7 @@ def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
 
     cg.add(var.set_address(config[CONF_ADDRESS]))
-    cg.add(var.set_timeout(config[CONF_RECEIVE_TIMEOUT])) 
+    cg.add(var.set_timeout(config[CONF_RECEIVE_TIMEOUT]))
 
     yield cg.register_component(var, config)
     yield uart.register_uart_device(var, config)

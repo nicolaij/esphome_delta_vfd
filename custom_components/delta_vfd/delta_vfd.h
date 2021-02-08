@@ -35,8 +35,10 @@ namespace esphome
 
       void set_address(uint8_t mbaddress) { this->mbaddress_ = mbaddress; };
       void set_timeout(unsigned long timeout) { this->timeout_ = timeout; };
-      void set_error_code_sensor(sensor::Sensor *error_code_sensor) { error_code_sensor_ = error_code_sensor; }
-      void set_status_code_sensor(sensor::Sensor *status_code_sensor) { status_code_sensor_ = status_code_sensor; }
+      /*void set_error_code_sensor(sensor::Sensor *error_code_sensor) { error_code_sensor_ = error_code_sensor; }*/
+      /*void set_status_code_sensor(sensor::Sensor *status_code_sensor) { status_code_sensor_ = status_code_sensor; }*/
+      sensor::Sensor *error_code_sensor = new sensor::Sensor();
+      sensor::Sensor *status_code_sensor = new sensor::Sensor();
 
     protected:
       void send_cmd_(uint8_t cmd, uint16_t start_address, uint16_t data);
@@ -51,8 +53,6 @@ namespace esphome
 
       int later_func_{};
 
-      sensor::Sensor *error_code_sensor_;
-      sensor::Sensor *status_code_sensor_;
     };
   } // namespace delta_vfd
 } // namespace esphome

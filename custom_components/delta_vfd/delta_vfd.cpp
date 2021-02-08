@@ -241,6 +241,18 @@ namespace esphome
         {
           ESP_LOGD(TAG, "DATA OK: %s - %d", this->read_buffer_, this->state_);
         }
+
+        if (frame[1] == 0x03)
+        {
+          uint8_t len = frame[2];
+          if (len == 4) //запрошено 2 слова
+          {
+            uint16_t error_code = (uint16_t(frame[3]<<8)) | frame[4];
+            uint16_t status_code = (uint16_t(frame[5]<<8)) | frame[6];
+            this->error_code_sensor->publish_state(error_code);
+            this->status_code_sensor->publish_state(status_code);
+          }
+        }
       }
     }
 
