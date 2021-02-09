@@ -13,7 +13,6 @@ wifi:
   ap:
     ssid: "encoder Fallback Hotspot"
     password: "123123123"
-    
   reboot_timeout: 0s
 #  power_save_mode: HIGH
 
@@ -25,6 +24,7 @@ logger:
     
 # Enable Home Assistant API
 api:
+  reboot_timeout: 0s
 
 ota:
 
