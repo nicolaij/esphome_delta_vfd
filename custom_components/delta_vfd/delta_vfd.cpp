@@ -147,7 +147,8 @@ namespace esphome
 
       this->write_str(send_frame);
 
-      delay(9);
+      int tdelay = ((p - send_frame) * 10 * 1000 ) / 19200 + 1;
+      delay(tdelay);
 
       digitalWrite(4, LOW); 
       digitalWrite(15, LOW);
@@ -195,7 +196,8 @@ namespace esphome
 
       this->write_str(send_frame);
 
-      delay(15);
+      int tdelay = ((p - send_frame) * 10 * 1000 ) / 19200 + 1;
+      delay(tdelay);
 
       digitalWrite(4, LOW); 
       digitalWrite(15, LOW);
