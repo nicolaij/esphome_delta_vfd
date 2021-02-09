@@ -10,12 +10,12 @@ namespace esphome
 
     void VFDComponent::update()
     {
-      if (this->state_ != STATE_REPLYWAIT)
+       if (this->state_ != STATE_REPLYWAIT)
       {
         this->state_ = STATE_REPLYWAIT;
         send_cmd_(0x03, 0x0000, 5); //read reg
       }
-    }
+    };
 
     void VFDComponent::start(uint16_t freq)
     {
@@ -26,9 +26,10 @@ namespace esphome
       }
       else
       {
-        this->later_func_ = freq * 5;
+        this->later_func_ = 1;
+        this->later_freq_ = freq;
       }
-    }
+    };
 
     void VFDComponent::stop()
     {
@@ -41,7 +42,7 @@ namespace esphome
       {
         this->later_func_ = -1;
       }
-    }
+    };
 
     void VFDComponent::loop()
     {
@@ -51,8 +52,8 @@ namespace esphome
           this->state_ = STATE_NOREPLY;
           if (this->later_func_ == -1)
             this->stop();
-          else if (this->later_func_ > 0)
-            this->start(this->later_func_);
+          else if (this->later_func_ == 1)
+            this->start(this->later_freq_);
 
           this->later_func_ = 0;
         }
@@ -99,7 +100,7 @@ namespace esphome
           this->read_pos_++;
         };
       }
-    }
+    };
 
     char DecToChar(uint8_t c)
     {
@@ -200,7 +201,7 @@ namespace esphome
       digitalWrite(15, LOW);
 
       ESP_LOGD(TAG, "Send: %s - %d", send_frame, this->state_);
-    }
+    };
 
     uint8_t CharToDec(char c)
     {
@@ -281,14 +282,14 @@ namespace esphome
           }
         }
       }
-    }
+    };
 
     void VFDComponent::dump_config()
     {
       ESP_LOGCONFIG(TAG, "DELTA VFD:");
       ESP_LOGCONFIG(TAG, "  ADDRESS: %d", this->mbaddress_);
       ESP_LOGCONFIG(TAG, "  Timeout: %ld", this->timeout_);
-    }
+    };
 
     float VFDComponent::get_setup_priority() const { return setup_priority::DATA; }
 
@@ -298,7 +299,7 @@ namespace esphome
       pinMode(15, OUTPUT);
       digitalWrite(4, LOW);
       digitalWrite(15, LOW);
-    }
+    };
 
   } // namespace delta_vfd
 } // namespace esphome

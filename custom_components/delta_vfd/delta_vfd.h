@@ -56,6 +56,7 @@ namespace esphome
       unsigned long timeout_;
 
       int later_func_{};
+      int later_freq_{};
     };
   } // namespace delta_vfd
 } // namespace esphome

@@ -15,7 +15,7 @@ CONFIG_SCHEMA = cv.All(cv.Schema({
     cv.GenerateID(): cv.declare_id(VFDComponent),
     cv.Optional(CONF_ADDRESS, default=1): cv.positive_int,
     cv.Optional(CONF_RECEIVE_TIMEOUT, default='1s'): cv.positive_time_period_milliseconds,
-}).extend(cv.polling_component_schema('5s')).extend(uart.UART_DEVICE_SCHEMA))
+}).extend(cv.polling_component_schema('10s')).extend(uart.UART_DEVICE_SCHEMA))
 
 
 def to_code(config):
